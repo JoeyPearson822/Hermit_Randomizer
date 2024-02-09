@@ -4,6 +4,7 @@ Program to randomly select a hermit to watch on YouTube
 """
 
 import random
+import os
 
 def choose_random_hermit():
     """
@@ -17,6 +18,7 @@ def choose_random_hermit():
     hermits_to_choose_from.remove(chosen_hermit)
     # output the result, and enjoy the YouTube video!
     print('Hermit to watch next:', chosen_hermit)
+    return chosen_hermit
 
 
 # Entry point for the program
@@ -29,11 +31,16 @@ if __name__ == '__main__':
         for remaining_hermit in file:
             hermits_to_choose_from.append(remaining_hermit)
 
-    # Randomize hermit selection
-    choose_random_hermit()
+    chosen_hermit = choose_random_hermit()
 
-    # Overwrite the file, excluding the chosen hermit
-    with open('remaining_hermits.txt', 'w') as file:
-        for remaining_hermit in file:
-            file.write(remaining_hermit)
+    with open("remaining_hermits.txt", "r") as input:
+        with open("temp.txt", "w") as output:
+            # iterate all lines from file
+            for line in input:
+                # if substring is in a line, then don't write it
+                if chosen_hermit not in line:
+                    output.write(line)
+
+    # replace file with original name
+    os.replace('temp.txt', 'remaining_hermits.txt')
         
